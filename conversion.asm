@@ -17,7 +17,7 @@ conv:
     sub $a2, $a2, $a0
     add $a2, $a2, $a1
 
-    slt $t2, $a0, $t1
+    slt $t2, $t3, $t1
     beq $t2, $zero, if_statement
 
     addi $t3, $t3, 1
