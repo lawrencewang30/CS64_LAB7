@@ -9,7 +9,7 @@ conv:
     li $a2, 0
     li $t1, 0
     li $t2, 8
-    li $t4, 3
+    li $t4, 2
 
 conv_loop:
     bge $t1, $t2, exit_loop
@@ -17,7 +17,7 @@ conv_loop:
     sub $a2, $a2, $t3
     add $a2, $a2, $a1
 
-    blt $a0, $t4, if_statement
+    ble $a0, $t4, if_statement
     addi $a1, $a1, -1
 
 if_statement:
