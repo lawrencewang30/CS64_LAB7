@@ -4,32 +4,28 @@
 #   make all returned values from functions go in $v0
 
 .text
-    li $a2, 0
     li $t0, 0
-    li $t1, 2
+    li $t1, 3
     li $t2, 0
-    add $t3, $a0, $zero
+    li $t3, 8
 conv:
     # TODO: Write your function code here
-    bgt $t0, 8, exit_loop
-    addi $t0, $t0, 1
-    sll $a0, $a0, 3
-    sub $a2, $a2, $a0
-    add $a2, $a2, $a1
+    bge $t2, $t3, exit_loop
+    sll $t4, $a0, 3
+    sub $t0, $t0, $t4
+    add $t0, $t0, $a1
 
-    slt $t2, $t3, $t1
-    beq $t2, $zero, if_statement
+    blt $a0, $t1, if_statement
+    addi $a1, $a1, -1
 
-    addi $t3, $t3, 1
-
+if_statement:
+    addi $a0, $a0, 1
+    addi $t2, $t2, 1
     j conv
 
 exit_loop:
-    addi $v0, $a2, 0
+    move $v0, $t0
     jr $ra
-
-if_statement:
-    addi $a1, $a1, -1
 
 main:  # DO NOT MODIFY THE MAIN SECTION
     li $a0, 5
