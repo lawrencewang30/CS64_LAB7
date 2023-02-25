@@ -85,85 +85,85 @@ Exit:
 # YOU CAN ONLY MODIFY THIS FILE FROM THIS POINT ONWARDS:
 SwapCase:
     #TODO: write your code here, $a0 stores the address of the string
-    add $s1, $a0, $zero
+    move $a1, $a0
     addiu $sp, $sp, -4
     sw $ra, 0($sp)
 
 SwapCase_loop:
     addiu $sp, $sp, -4
-    sw $s1, 0($sp)
+    sw $a1, 0($sp)
     li $t0, 65
     li $t1, 90
     li $t2, 97
     li $t3, 122
 
-    lb $a1, 0($s1)
-    beq $a1, $zero, Exit
+    lb $t4, 0($a1)
+    beq $t4, $zero, exit
 
 is_upper:
-    blt $a1, $t0, jump
-    bgt $a1, $t1, is_lower
+    blt $t4, $t0, jump_loop
+    bgt $t4, $t1, is_lower
     j upperC_convert
 
 is_lower:
-    blt $a1, $t2, jump
-    bgt $a1, $t3, jump
+    blt $t4, $t2, jump_loop
+    bgt $t4, $t3, jump_loop
     j lowerC_convert
 
 upperC_convert:
     li $v0, 11
-    move $a0, $a1
+    move $a0, $t4
     syscall
 
     li $v0, 4
     la $a0, newline
     syscall
 
-    addi $a1, $a1, 32
+    addi $t4, $t4, 32
     
     li $v0, 11
-    move $a0, $a1
+    move $a0, $t4
     syscall
 
     li $v0, 4
     la $a0, newline
     syscall
 
-    sb $a1, 0($s1)
+    sb $t4, 0($a1)
     jal ConventionCheck
-    j jump
+    j jump_loop
 
 lowerC_convert:
     li $v0, 11
-    move $a0, $a1
+    move $a0, $t4
     syscall
 
     li $v0, 4
     la $a0, newline
     syscall
 
-    addi $a1, $a1, -32
+    addi $t4, $t4, -32
 
     li $v0, 11
-    move $a0, $a1
+    move $a0, $t4
     syscall
 
     li $v0, 4
     la $a0, newline
     syscall
 
-    sb $a1, 0($s1)
+    sb $t4, 0($a1)
     jal ConventionCheck
-    j jump
+    j jump_loop
 
-jump:
-    lw $s1, 0($sp)
+jump_loop:
+    lw $a1, 0($sp)
     addiu $sp, $sp, 4
-    addiu $s1, $s1, 1
+    addiu $a1, $a1, 1
     j SwapCase_loop
 
-return:
-    lw $s1, 0($sp)
+exit:
+    lw $a1, 0($sp)
     addiu $sp, $sp, 4
     lw $ra, 0($sp)
     addiu $sp, $sp, 4
