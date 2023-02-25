@@ -6,41 +6,34 @@
 .data
 	array: .word 1 2 3 4 5 6 7 8 9 10
 	cout: .asciiz "The contents of the array in reverse order are:\n"
+	newline: .asciiz "\n"
 
 .text
-	li $t0, 0
-	srl $t1, $a1, 1
-	li $t6, 0
 printA:
     # TODO: Write your function code here
-	beq $t0, $t1, exit_loop
-	sll $t2, $t0, 2
-	add $t2, $t2, $a0
-	lw $t3, 0($t2)
+	addi $t0, $a0, 0
+	addi $a1, $a1, -1
 
-	sll $t4, $t1, 2
-	add $a0, $a0, $t4
-	lw $t5, 0($a0)
+printA_loop:
+	li $t2, 0  
+	li $t3, 0
+	blt $a1, $zero, exit_loop
+	sll $t2, $a1, 2               # go to address of last element of array
+	add $t3, $t0, $t2             # put address of last element in $t3
+	lw $t5, 0($t3)                # load last element in $t5
 
-	sw $t3, 0($a0)
-	sw $t5, 0($t2)
-
-	addi $t0, $t0, 1
-	addi $t1, $t1, -1
-
-	j printA
-
-exit_loop:
-	bgt $t6, $a1, exit_print
-	addi $t6, $t6, 1
-	lw $t3, 0($a0)
 	li $v0, 1
+	move $a0, $t5
 	syscall
 
-	addi $a0, $a0, 4
-	j exit_loop
+	li $v0, 4
+	la $a0, newline
+	syscall
+	
+	addi $a1, $a1, -1             # decrement to the next last element in array
+	j printA_loop                 # repeat loop
 
-exit_print:
+exit_loop:
 	jr $ra
 
 

@@ -85,6 +85,87 @@ Exit:
 # YOU CAN ONLY MODIFY THIS FILE FROM THIS POINT ONWARDS:
 SwapCase:
     #TODO: write your code here, $a0 stores the address of the string
+    add $s1, $a0, $zero
+    addiu $sp, $sp, -4
+    sw $ra, 0($sp)
+
+SwapCase_loop:
+    addiu $sp, $sp, -4
+    sw $s1, 0($sp)
+    li $t0, 65
+    li $t1, 90
+    li $t2, 97
+    li $t3, 122
+
+    lb $a1, 0($s1)
+    beq $a1, $zero, Exit
+
+is_upper:
+    blt $a1, $t0, jump
+    bgt $a1, $t1, is_lower
+    j upperC_convert
+
+is_lower:
+    blt $a1, $t2, jump
+    bgt $a1, $t3, jump
+    j lowerC_convert
+
+upperC_convert:
+    li $v0, 11
+    move $a0, $a1
+    syscall
+
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    addi $a1, $a1, 32
     
+    li $v0, 11
+    move $a0, $a1
+    syscall
+
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    sb $a1, 0($s1)
+    jal ConventionCheck
+    j jump
+
+lowerC_convert:
+    li $v0, 11
+    move $a0, $a1
+    syscall
+
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    addi $a1, $a1, -32
+
+    li $v0, 11
+    move $a0, $a1
+    syscall
+
+    li $v0, 4
+    la $a0, newline
+    syscall
+
+    sb $a1, 0($s1)
+    jal ConventionCheck
+    j jump
+
+jump:
+    lw $s1, 0($sp)
+    addiu $sp, $sp, 4
+    addiu $s1, $s1, 1
+    j SwapCase_loop
+
+return:
+    lw $s1, 0($sp)
+    addiu $sp, $sp, 4
+    lw $ra, 0($sp)
+    addiu $sp, $sp, 4
     # Do not remove this line - it should be the last line in your function code
     jr $ra
